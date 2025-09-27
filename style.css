@@ -1,125 +1,21 @@
-/* --- CSS RESET & FONT SETUP --- */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-    /* This is the most reliable way to center a single element on a page */
-    min-height: 100vh;
-    display: grid;
-    place-items: center;
-    padding: 1rem;
-}
-
-:root {
-    /* Light Theme (Default) */
-    --bg-gradient: linear-gradient(135deg, #87CEEB, #6DD5FA);
-    --card-bg: rgba(255, 255, 255, 0.6);
-    --text-primary: #1A202C;
-    --text-secondary: #4A5568;
-    --accent-color: #3182CE;
-    --shadow-color: rgba(0, 0, 0, 0.1);
-    --ring-color: #3182CE;
-}
-
-[data-theme="dark"] {
-    /* Dark Theme */
-    --bg-gradient: linear-gradient(135deg, #232526, #414345);
-    --card-bg: rgba(26, 32, 44, 0.7);
-    --text-primary: #E2E8F0;
-    --text-secondary: #A0AEC0;
-    --accent-color: #63B3ED;
-    --shadow-color: rgba(0, 0, 0, 0.3);
-    --ring-color: #63B3ED;
-}
-
+/* I'm using this file for custom styles that are a bit tricky with only Tailwind,
+like the dynamic background image.
+*/
 .background-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: var(--bg-gradient);
-    z-index: -1;
-    transition: background 0.5s ease;
+    z-index: 0;
+    background-size: cover;
+    background-position: center;
+    transition: background-image 1s ease-in-out;
+    /* This will be my default background */
+    background-image: linear-gradient(135deg, #87CEEB, #6DD5FA);
 }
 
-.weather-card {
-    width: 100%;
-    max-width: 400px;
-    background-color: var(--card-bg);
-    backdrop-filter: blur(15px);
-    border-radius: 1.5rem;
-    padding: 2rem;
-    box-shadow: 0 10px 30px var(--shadow-color);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    text-align: center; /* Center all text inside the card */
+.background-container.rain {
+     /* I'll switch to this background when the weather is rainy. */
+    background-image: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Z2eGp6ZDNrbDBqM3J1emM2eGJhaXh4NTBkN3hscWp1OWRwbXpxMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/t7Qb8655Z1VfBGr5XB/giphy.gif');
 }
-
-/* Header & Search */
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 1.5rem;
-}
-.header-title { color: var(--text-primary); }
-
-.search-container {
-    display: flex;
-    width: 100%;
-    margin-bottom: 1.5rem;
-}
-
-.input-field {
-    width: 100%;
-    border: 1px solid transparent;
-    padding: 0.75rem;
-    background-color: var(--card-bg);
-    color: var(--text-primary);
-    border-top-left-radius: 0.75rem;
-    border-bottom-left-radius: 0.75rem;
-    font-size: 1rem;
-}
-.input-field::placeholder { color: var(--text-secondary); }
-.input-field:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px var(--ring-color);
-}
-
-.search-button, .theme-toggle-button {
-    flex-shrink: 0;
-    padding: 0.75rem;
-    border: none;
-    background-color: var(--accent-color);
-    color: white;
-    cursor: pointer;
-    transition: filter 0.2s;
-    display: grid;
-    place-items: center;
-}
-.search-button {
-    border-top-right-radius: 0.75rem;
-    border-bottom-right-radius: 0.75rem;
-}
-.theme-toggle-button {
-    border-radius: 0.75rem;
-}
-.search-button:hover, .theme-toggle-button:hover { filter: brightness(1.1); }
-.icon { width: 1.5rem; height: 1.5rem; } /* For SVG icons */
-
-
-/* Weather Display */
-#weather-display img { margin: -1rem auto -0.5rem; width: 128px; height: 128px; }
-#temperature { font-size: 3.75rem; font-weight: 700; color: var(--text-primary); }
-#city-name { font-size: 1.875rem; font-weight: 600; color: var(--text-primary); }
-#weather-description { font-size: 1.25rem; color: var(--text-secondary); margin-top: 0.25rem; text-transform: capitalize; }
-.info-container { display: flex; justify-content: space-around; width: 100%; margin-top: 2rem; }
-.info-item p { color: var(--text-primary); font-weight: 600; }
-.sub-text { color: var(--text-secondary); font-weight: 400; }
-#message-display { color: var(--text-secondary); }
-.hidden { display: none; }
