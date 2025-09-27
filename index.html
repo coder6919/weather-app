@@ -3,52 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather App</title>
-    <link rel="stylesheet" href="style.css">
+    <title>WeatherWise Forecast</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+        // This script helps Tailwind CSS support dark mode based on a class
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        poppins: ['Poppins', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
 </head>
-<body>
-    <div class="background-container"></div>
+<body class="font-poppins bg-gray-100 dark:bg-gray-900 transition-colors duration-500">
 
-    <div class="weather-card">
-        <div class="header-container">
-            <h2 class="header-title">WeatherWise</h2>
-            <button id="theme-toggle" class="theme-toggle-button"></button>
-        </div>
+    <div id="background-container" class="background-container"></div>
 
-        <div class="search-container">
-            <input type="text" id="city-input" placeholder="Enter city name..." class="input-field">
-            <button id="search-btn" class="search-button">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-            </button>
-        </div>
+    <main class="relative z-10 flex justify-center items-center min-h-screen p-4">
+        <div class="w-full max-w-4xl">
+            <header class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-gray-800 dark:text-white">WeatherWise</h1>
+                <button id="theme-toggle" class="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </button>
+            </header>
 
-        <div id="weather-display" class="hidden">
-            <img id="weather-icon" src="" alt="Weather Icon">
-            <h1 id="temperature"></h1>
-            <h2 id="city-name"></h2>
-            <p id="weather-description"></p>
-            <div class="info-container">
-                <div class="info-item">
-                    <p id="humidity"></p>
-                    <p class="sub-text">Humidity</p>
+            <div class="bg-white/60 dark:bg-black/30 backdrop-blur-lg p-6 rounded-2xl shadow-lg mb-6">
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="relative flex-grow">
+                        <input type="text" id="city-input" placeholder="Search for a city..." class="w-full py-3 pl-12 pr-4 rounded-full bg-white/70 dark:bg-gray-800/70 text-gray-800 dark:text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <svg class="w-6 h-6 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                    </div>
+                    <button id="search-btn" class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-colors">Search</button>
+                    <button id="current-location-btn" title="Get current location weather" class="p-3 bg-gray-600 text-white rounded-full hover:bg-gray-700 transition-colors flex-shrink-0">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                    </button>
                 </div>
-                <div class="info-item">
-                    <p id="wind-speed"></p>
-                    <p class="sub-text">Wind Speed</p>
+                <div id="recent-searches-container" class="relative mt-4 hidden">
+                     <select id="recent-searches-dropdown" class="w-full p-2 rounded-lg bg-white/70 dark:bg-gray-800/70 text-gray-800 dark:text-gray-200 focus:outline-none">
+                        </select>
                 </div>
             </div>
-        </div>
-        
-        <div id="message-display">
-            <p>Enter a city to get the weather!</p>
-        </div>
-    </div>
 
-    <script src="script.js" defer></script>
+            <div id="weather-container" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div id="current-weather-display" class="lg:col-span-1 bg-white/60 dark:bg-black/30 backdrop-blur-lg p-6 rounded-2xl shadow-lg hidden">
+                    <div class="text-center">
+                        <h2 id="city-name" class="text-3xl font-bold text-gray-800 dark:text-white"></h2>
+                        <p id="weather-description" class="text-lg capitalize text-gray-600 dark:text-gray-300"></p>
+                        <img id="weather-icon" src="" alt="Weather Icon" class="mx-auto w-32 h-32 -my-2">
+                        <div class="flex justify-center items-start my-4">
+                            <span id="temperature" class="text-7xl font-bold text-gray-900 dark:text-white"></span>
+                             <div class="text-2xl font-bold ml-2">
+                                <button id="temp-unit-c" class="text-gray-800 dark:text-white font-bold opacity-100">°C</button>
+                                <span class="text-gray-400 dark:text-gray-500">/</span>
+                                <button id="temp-unit-f" class="text-gray-400 dark:text-gray-500 font-bold opacity-50">°F</button>
+                            </div>
+                        </div>
+
+                         <div id="weather-alert" class="mt-4 p-3 bg-red-500/80 text-white rounded-lg hidden">
+                            <p id="alert-message"></p>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 text-left mt-6">
+                            <div class="flex items-center gap-3">
+                                <svg class="w-8 h-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <div>
+                                    <p class="font-semibold text-gray-800 dark:text-white" id="humidity"></p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Humidity</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                               <svg class="w-8 h-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                <div>
+                                    <p class="font-semibold text-gray-800 dark:text-white" id="wind-speed"></p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Wind Speed</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="forecast-display" class="lg:col-span-2 bg-white/60 dark:bg-black/30 backdrop-blur-lg p-6 rounded-2xl shadow-lg hidden">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-white">5-Day Forecast</h3>
+                    <div id="forecast-cards-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                        </div>
+                </div>
+
+                <div id="message-display" class="lg:col-span-3 text-center py-12 bg-white/60 dark:bg-black/30 backdrop-blur-lg rounded-2xl shadow-lg">
+                    <p class="text-xl text-gray-600 dark:text-gray-300">Enter a city to get started!</p>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
 </body>
 </html>
